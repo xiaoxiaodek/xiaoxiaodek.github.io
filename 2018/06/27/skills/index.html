@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一. moment.js二. redis三. lodash">
+<meta property="og:type" content="article">
+<meta property="og:title" content="skills">
+<meta property="og:url" content="http://yoursite.com/2018/06/27/skills/index.html">
+<meta property="og:site_name" content="捧霜洗余温">
+<meta property="og:description" content="一. moment.js二. redis三. lodash">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-16T06:41:30.439Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="skills">
+<meta name="twitter:description" content="一. moment.js二. redis三. lodash">
+  <link rel="canonical" href="http://yoursite.com/2018/06/27/skills/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>skills | 捧霜洗余温</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">捧霜洗余温</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-schedule">
+      
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>Schedule</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/27/skills/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kk向日葵">
+      <meta itemprop="description" content="你眼中，清风明月">
+      <meta itemprop="image" content="/upload/ben.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="捧霜洗余温">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">skills
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2018-06-27 09:31:45" itemprop="dateCreated datePublished" datetime="2018-06-27T09:31:45+08:00">2018-06-27</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-09-16 14:41:30" itemprop="dateModified" datetime="2019-09-16T14:41:30+08:00">2019-09-16</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一-moment-js"><a href="#一-moment-js" class="headerlink" title="一. moment.js"></a>一. moment.js</h3><h3 id="二-redis"><a href="#二-redis" class="headerlink" title="二. redis"></a>二. redis</h3><h3 id="三-lodash"><a href="#三-lodash" class="headerlink" title="三. lodash"></a>三. lodash</h3><a id="more"></a>
+<blockquote>
+<ol>
+<li>_map():对象数组中取出对应key的值：<br>eg：_map( Array<object>,  key)<br>输入<br>[ { “name” : “tom”, “age” : 2 },<br>{ “name” : “sam”, “age” : 34 }]<br>key = “name”<br>输出:<br>[ “tom”,  “sam”]</object></li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>_pick()  :Returns the new object.<br>eg: _pick({ a:String, b:String, c:String }, [a,b])<br>rerun    { a:String, b:String } <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;  	<span class="keyword">var</span> object = &#123; <span class="string">'a'</span>: <span class="number">1</span>, <span class="string">'b'</span>: <span class="string">'2'</span>, <span class="string">'c'</span>: <span class="number">3</span> &#125;; </span><br><span class="line">&gt;  	_.pick(object, [<span class="string">'a'</span>, <span class="string">'c'</span>]);</span><br><span class="line">&gt;  	<span class="comment">// =&gt; &#123; 'a': 1, 'c': 3 &#125;</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>_groupBy() : Returns the composed aggregate object.（返回自由聚合的对象）<br>eg:  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">_.groupBy([<span class="number">6.1</span>, <span class="number">4.2</span>, <span class="number">6.3</span>], <span class="built_in">Math</span>.floor);</span><br><span class="line"><span class="comment">// =&gt; &#123; '4': [4.2], '6': [6.1, 6.3] &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The `_.property` iteratee shorthand.</span></span><br><span class="line">_.groupBy([<span class="string">'one'</span>, <span class="string">'two'</span>, <span class="string">'three'</span>], <span class="string">'length'</span>);</span><br><span class="line"><span class="comment">// =&gt; &#123; '3': ['one', 'two'], '5': ['three'] &#125;</span></span><br><span class="line"> 对象数组 groupby之后 返回的是对象 数据格式</span><br><span class="line">&#123; </span><br><span class="line"> 	<span class="number">23</span>: [</span><br><span class="line">&#123;<span class="string">"name"</span>:<span class="string">"23"</span>, <span class="string">"age"</span>:<span class="number">1234</span>, <span class="string">"koa"</span>: <span class="string">"dfga"</span>&#125;,</span><br><span class="line">&#123;<span class="string">"name"</span>:<span class="string">"23"</span>, <span class="string">"age"</span>:<span class="number">45</span>, <span class="string">"koa"</span>: <span class="string">"dfga"</span>&#125;</span><br><span class="line">],</span><br><span class="line">      	aaa:[</span><br><span class="line">&#123;<span class="string">"name"</span>:<span class="string">"aaa"</span>, <span class="string">"age"</span>:<span class="number">1234</span>, <span class="string">"koa"</span>: <span class="string">"dfga"</span>&#125;,</span><br><span class="line">],</span><br><span class="line">    	 <span class="number">56</span>:[</span><br><span class="line">&#123;<span class="string">"name"</span>:<span class="string">"56"</span>, <span class="string">"age"</span>:<span class="number">1234</span>, <span class="string">"koa"</span>: <span class="string">"dfga"</span>&#125;</span><br><span class="line">]</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> a = [&#123;<span class="string">"name"</span>:<span class="string">"aaa"</span>, <span class="string">"age"</span>:<span class="number">1234</span>, <span class="string">"koa"</span>: <span class="string">"dfga"</span>&#125;,&#123;<span class="string">"name"</span>:<span class="string">"23"</span>, <span class="string">"age"</span>:<span class="number">1234</span>, <span class="string">"koa"</span>: <span class="string">"dfga"</span>&#125;,&#123;<span class="string">"name"</span>:<span class="string">"23"</span>, <span class="string">"age"</span>:<span class="number">45</span>, <span class="string">"koa"</span>: <span class="string">"dfga"</span>&#125;,&#123;<span class="string">"name"</span>:<span class="string">"56"</span>, <span class="string">"age"</span>:<span class="number">1234</span>, <span class="string">"koa"</span>: <span class="string">"dfga"</span>&#125;];</span><br><span class="line"><span class="keyword">let</span> b = _.groupBy(a,<span class="string">'name'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(b[<span class="number">23</span>]);</span><br><span class="line"><span class="built_in">console</span>.log(b[<span class="number">23</span>][<span class="number">0</span>]);</span><br><span class="line"><span class="built_in">console</span>.log(b[<span class="number">23</span>][<span class="number">0</span>].age);</span><br><span class="line"><span class="built_in">console</span>.log(b[<span class="number">23</span>][<span class="number">0</span>].koa);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="4">
+<li>_uniq(Array)<br>Returns the new duplicate free array.<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_.uniq([<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>]);</span><br><span class="line"><span class="comment">// =&gt; [2, 1]</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="5">
+<li>_.intersection()<br>数组交集<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_.intersection([<span class="number">2</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="comment">// =&gt; [2]</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="6">
+<li>_.isEqual() 源码 可以比较数组和对象，不能用于函数或者dom  </li>
+</ol>
+</blockquote>
+<h3 id="四-pm2"><a href="#四-pm2" class="headerlink" title="四. pm2"></a>四. pm2</h3><h3 id="五-mysql使用"><a href="#五-mysql使用" class="headerlink" title="五. mysql使用"></a>五. mysql使用</h3><h3 id="1-其他的坑"><a href="#1-其他的坑" class="headerlink" title="1. 其他的坑"></a>1. 其他的坑</h3><blockquote>
+<ol>
+<li>require.main  === module 可以判断一个文件是直接运行，还是被其他的模块调用</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>npm script 中的钩子函数（执行顺序）<ul>
+<li>prebuild   (pre)</li>
+<li>build</li>
+<li>postbuild  (post)</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>moment， moment-timezone。 moment-timezone中 import 了 moment</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="4">
+<li>ts 中 接口 interface 继承 使用 implements<br>字典  {[key : Type] : Type}</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="5">
+<li>公司服务器手动打包 ：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>    npm run build</span><br><span class="line"><span class="meta">&gt;</span>    zip -r build.zip build/</span><br><span class="line"><span class="meta">&gt;</span>    scp build.zip wangss@2222:/tmp</span><br><span class="line"><span class="meta">&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="6">
+<li>vsc 调试：<br>通过附加到进程<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&#123;</span><br><span class="line">&gt;  // 使用 IntelliSense 了解相关属性。 </span><br><span class="line">&gt;  // 悬停以查看现有属性的描述。</span><br><span class="line">&gt;  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387</span><br><span class="line">&gt;  "version": "0.2.0",</span><br><span class="line">&gt;  "configurations": [</span><br><span class="line">&gt;     &#123;</span><br><span class="line">&gt;     "type": "node",</span><br><span class="line">&gt;      "request": "attach",</span><br><span class="line">&gt;      "name": "Attach",</span><br><span class="line">&gt;      "port": 9229</span><br><span class="line">&gt;    &#125;</span><br><span class="line">&gt;  ]</span><br><span class="line">&gt;&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="7">
+<li><a href="https://blog.risingstack.com/node-js-security-checklist/" target="_blank" rel="noopener">node.js主要安全策略</a></li>
+</ol>
+<blockquote>
+<p>helmet : http 安全链接<br>ratelimit: 限制客户端请求次数<br>密码必须大小写字母，特殊字符，数字，最低8位<br>请求session和cookie： 请求必须携带token或者jessionId的cookie<br>postman低版本默认不带有</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<ol start="8">
+<li>虚拟机 error: Network is unreachable<br>没有设置网关（与主os一致）<br>修改 hostname <pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;		hostname slave1</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</code></pre></li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="9">
+<li>在开启多个任务（线程）进行数据库连接（或者其他占用系统资源的操作的），记得释放连接，确保所有情况下，最终进程都会退出<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  process.exit(0) // 一般情况正常结束退出返回 0</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<p> mysql 错误连接数太多  当连接错误次数过多时，mysql会禁止客户机连接，这个时候有两个办法解决：<br> 使用mysqladmin flush-hosts命令清除缓存，命令执行方法如下：<br> 命令行或终端：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  mysqladmin  -u  root  -p  flush-hosts</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p> 接着输入root账号密码即可</p>
+<ol start="10">
+<li>在使用 <strong><em>_dirname</em></strong>     <strong><em>_filename</em></strong> 变量的时候要注意  打包后的路径不一定与打包前相同。 ../</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="11">
+<li>node stream 中手动实现<strong><em>readStream</em></strong> 时， 要 实现 <strong><em>_read()</em></strong>事件， push数据完成后, <strong><em>stream.push(null)</em></strong> 发送结束标志。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="12">
+<li>sql语句中 ： 只有字段，数据库名 采用反引号 <code></code> ， 字符串只能采用 ‘’</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="13">
+<li>sequelize 查询结果的返回格式： 对象数组？？？？？</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="14">
+<li>mysql update/delete数据时 采用 where条件而不是主键（不包含主键）时<br>权宜之计可以临时采用非安全模式。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SET SQL_SAFE_UPDATES = 0;</span><br><span class="line">XXXXXXX</span><br><span class="line">SET SQL_SAFE_UPDATES = 1;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="15">
+<li>关系型数据库  树型结构数据的保存<blockquote>
+<p>a. 链接表方式（保存父节点 parent_id）：<br>b. 在a中增加 level 和 当前节点的顺序</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2018/06/05/node/" rel="next" title="TODO">
+                  <i class="fa fa-chevron-left"></i> TODO
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2018/06/27/mongo/" rel="prev" title="mongo">
+                  mongo <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-moment-js"><span class="nav-number">1.</span> <span class="nav-text">一. moment.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-redis"><span class="nav-number">2.</span> <span class="nav-text">二. redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-lodash"><span class="nav-number">3.</span> <span class="nav-text">三. lodash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-pm2"><span class="nav-number">4.</span> <span class="nav-text">四. pm2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-mysql使用"><span class="nav-number">5.</span> <span class="nav-text">五. mysql使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-其他的坑"><span class="nav-number">6.</span> <span class="nav-text">1. 其他的坑</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/upload/ben.jpg"
+      alt="kk向日葵">
+  <p class="site-author-name" itemprop="name">kk向日葵</p>
+  <div class="site-description" itemprop="description">你眼中，清风明月</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:yourname@gmail.com" title="E-Mail &rarr; mailto:yourname@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://instagram.com/yourname" title="Instagram &rarr; https://instagram.com/yourname" rel="noopener" target="_blank"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kk向日葵</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/lib2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"lib2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/lib2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false,"tagMode":false});</script></body>
+</html>

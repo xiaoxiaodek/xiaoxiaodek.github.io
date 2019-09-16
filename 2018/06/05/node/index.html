@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="node一. koa洋葱模型是怎么实现的？和express对比解决了什么问题二. Nodejs 如何高效的获取时间戳而不影响性能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TODO">
+<meta property="og:url" content="http://yoursite.com/2018/06/05/node/index.html">
+<meta property="og:site_name" content="捧霜洗余温">
+<meta property="og:description" content="node一. koa洋葱模型是怎么实现的？和express对比解决了什么问题二. Nodejs 如何高效的获取时间戳而不影响性能">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-16T06:41:30.439Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TODO">
+<meta name="twitter:description" content="node一. koa洋葱模型是怎么实现的？和express对比解决了什么问题二. Nodejs 如何高效的获取时间戳而不影响性能">
+  <link rel="canonical" href="http://yoursite.com/2018/06/05/node/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>TODO | 捧霜洗余温</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">捧霜洗余温</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-schedule">
+      
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>Schedule</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/05/node/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kk向日葵">
+      <meta itemprop="description" content="你眼中，清风明月">
+      <meta itemprop="image" content="/upload/ben.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="捧霜洗余温">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">TODO
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2018-06-05 09:28:53" itemprop="dateCreated datePublished" datetime="2018-06-05T09:28:53+08:00">2018-06-05</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-09-16 14:41:30" itemprop="dateModified" datetime="2019-09-16T14:41:30+08:00">2019-09-16</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="node"><a href="#node" class="headerlink" title="node"></a>node</h1><h3 id="一-koa洋葱模型是怎么实现的？和express对比解决了什么问题"><a href="#一-koa洋葱模型是怎么实现的？和express对比解决了什么问题" class="headerlink" title="一. koa洋葱模型是怎么实现的？和express对比解决了什么问题"></a>一. koa洋葱模型是怎么实现的？和express对比解决了什么问题</h3><h3 id="二-Nodejs-如何高效的获取时间戳而不影响性能"><a href="#二-Nodejs-如何高效的获取时间戳而不影响性能" class="headerlink" title="二. Nodejs 如何高效的获取时间戳而不影响性能"></a>二. Nodejs 如何高效的获取时间戳而不影响性能</h3><a id="more"></a>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 执行效率由高到低</span></span><br><span class="line"><span class="built_in">Date</span>.now();</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Date</span>().getTime();</span><br><span class="line">+<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">process.uptime(); <span class="comment">// 返回的是Node程序已运行的时间，单位秒。</span></span><br><span class="line">process.hrtime(); <span class="comment">// 返回的是当前的高分辨率时间，格式为[秒, 纳秒]</span></span><br></pre></td></tr></table></figure>
+<p>​    process.hrtime() 返回两次调用之间的时间差，主要用来衡量程序的性能</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> time = process.hrtime();</span><br><span class="line"><span class="built_in">console</span>.log(process.hrtime(time));</span><br></pre></td></tr></table></figure>
+<p>性能测试代码<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTimeDifference</span>(<span class="params">method, time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> count = time || <span class="string">'100000'</span>;</span><br><span class="line">    <span class="built_in">console</span>.time(method);</span><br><span class="line">    <span class="keyword">while</span> (count) &#123;</span><br><span class="line">        <span class="built_in">eval</span>(method);</span><br><span class="line">        count--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.timeEnd(method);</span><br><span class="line">&#125;</span><br><span class="line">getTimeDifference(<span class="string">'Date.now()'</span>);</span><br><span class="line">getTimeDifference(<span class="string">'process.uptime()'</span>);</span><br><span class="line">getTimeDifference(<span class="string">'new Date().getTime()'</span>);</span><br><span class="line">getTimeDifference(<span class="string">'+ new Date()'</span>);</span><br><span class="line">getTimeDifference(<span class="string">'process.hrtime()'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>v8.10.0 运行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Date</span>.now(): <span class="number">26.602</span>ms</span><br><span class="line">process.uptime(): <span class="number">30.199</span>ms</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Date</span>().getTime(): <span class="number">29.328</span>ms</span><br><span class="line">+ <span class="keyword">new</span> <span class="built_in">Date</span>(): <span class="number">37.144</span>ms</span><br><span class="line">process.hrtime(): <span class="number">24.849</span>ms</span><br></pre></td></tr></table></figure>
+<p><em>结论</em>：要获取一个精确的时间的间隔，用process.hrtime()；大量循环获取时间戳的时候，要考虑性能的时候用Date.now();</p>
+<h3 id="三-node-js单线程的，如何发挥多核优势？cluster模块对比pm2有什么优势？"><a href="#三-node-js单线程的，如何发挥多核优势？cluster模块对比pm2有什么优势？" class="headerlink" title="三.node.js单线程的，如何发挥多核优势？cluster模块对比pm2有什么优势？"></a>三.node.js单线程的，如何发挥多核优势？cluster模块对比pm2有什么优势？</h3><p>开启多进程集群（共享一个tcp连接），cluster模块自己可以完全控制集群的细节，pm2更方便。 </p>
+<h4 id="1-cluster模式代码"><a href="#1-cluster模式代码" class="headerlink" title="1. cluster模式代码"></a>1. <strong>cluster模式代码</strong></h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cluster = <span class="built_in">require</span>(<span class="string">'cluster'</span>);</span><br><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"><span class="keyword">var</span> numCPUs = <span class="built_in">require</span>(<span class="string">'os'</span>).cpus().length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (cluster.isMaster) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'[master] '</span> + <span class="string">"start master..."</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; numCPUs; i++) &#123;</span><br><span class="line">        <span class="keyword">var</span> wk = cluster.fork();</span><br><span class="line">        wk.send(<span class="string">'[master] '</span> + <span class="string">'hi worker'</span> + wk.id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cluster.on(<span class="string">'fork'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">worker</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'[master] '</span> + <span class="string">'fork: worker'</span> + worker.id);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    cluster.on(<span class="string">'online'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">worker</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'[master] '</span> + <span class="string">'online: worker'</span> + worker.id);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    cluster.on(<span class="string">'listening'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">worker, address</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'[master] '</span> + <span class="string">'listening: worker'</span> + worker.id + <span class="string">',pid:'</span> + worker.process.pid + <span class="string">', Address:'</span> + address.address + <span class="string">":"</span> + address.port);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    cluster.on(<span class="string">'disconnect'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">worker</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'[master] '</span> + <span class="string">'disconnect: worker'</span> + worker.id);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    cluster.on(<span class="string">'exit'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">worker, code, signal</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'[master] '</span> + <span class="string">'exit worker'</span> + worker.id + <span class="string">' died'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">eachWorker</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> id <span class="keyword">in</span> cluster.workers) &#123;</span><br><span class="line">            callback(cluster.workers[id]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        eachWorker(<span class="function"><span class="keyword">function</span> (<span class="params">worker</span>) </span>&#123;</span><br><span class="line">            worker.send(<span class="string">'[master] '</span> + <span class="string">'send message to worker'</span> + worker.id);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;, <span class="number">3000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>.keys(cluster.workers).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">        cluster.workers[id].on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">msg</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'[master] '</span> + <span class="string">'message '</span> + msg);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (cluster.isWorker) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'[worker] '</span> + <span class="string">"start worker ..."</span> + cluster.worker.id);</span><br><span class="line"></span><br><span class="line">    process.on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">msg</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'[worker] '</span>+msg);</span><br><span class="line">        process.send(<span class="string">'[worker] worker'</span>+cluster.worker.id+<span class="string">' received!'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">            res.writeHead(<span class="number">200</span>, &#123;<span class="string">"content-type"</span>: <span class="string">"text/html"</span>&#125;);</span><br><span class="line">            res.end(<span class="string">'worker'</span>+cluster.worker.id+<span class="string">',PID:'</span>+process.pid);</span><br><span class="line">    &#125;).listen(<span class="number">3000</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实现负载均衡 ？？？ 看不出来啊啊啊</span></span><br><span class="line"><span class="keyword">var</span> cluster = <span class="built_in">require</span>(<span class="string">'cluster'</span>);</span><br><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"><span class="keyword">var</span> numCPUs = <span class="built_in">require</span>(<span class="string">'os'</span>).cpus().length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (cluster.isMaster) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'[master] '</span> + <span class="string">"start master..."</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; numCPUs; i++) &#123;</span><br><span class="line">         cluster.fork();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cluster.on(<span class="string">'listening'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">worker, address</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'[master] '</span> + <span class="string">'listening: worker'</span> + worker.id + <span class="string">',pid:'</span> + worker.process.pid + <span class="string">', Address:'</span> + address.address + <span class="string">":"</span> + address.port);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (cluster.isWorker) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'[worker] '</span> + <span class="string">"start worker ..."</span> + cluster.worker.id);</span><br><span class="line">    http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'worker'</span>+cluster.worker.id);</span><br><span class="line">        res.end(<span class="string">'worker'</span>+cluster.worker.id+<span class="string">',PID:'</span>+process.pid);</span><br><span class="line">    &#125;).listen(<span class="number">3000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>cluster API</p>
+<p><strong>cluster对象</strong> cluster的各种属性和函数<br> cluster.setttings:配置集群参数对象<br> cluster.isMaster:判断是不是master节点<br> cluster.isWorker:判断是不是worker节点<br> Event: ‘fork’: 监听创建worker进程事件<br> Event: ‘online’: 监听worker创建成功事件<br> Event: ‘listening’: 监听worker向master状态事件<br> Event: ‘disconnect’: 监听worker断线事件<br> Event: ‘exit’: 监听worker退出事件<br> Event: ‘setup’: 监听setupMaster事件<br> cluster.setupMaster([settings]): 设置集群参数<br> cluster.fork([env]): 创建worker进程<br> cluster.disconnect([callback]): 关闭worket进程<br> cluster.worker: 获得当前的worker对象<br> cluster.workers: 获得集群中所有存活的worker对象</p>
+<p><strong>worker对象</strong> worker的各种属性和函数：可以通过cluster.workers, cluster.worker获得。<br> worker.id: 进程ID号<br> worker.process: ChildProcess对象<br> worker.suicide: 在disconnect()后，判断worker是否自杀<br> worker.send(message, [sendHandle]): master给worker发送消息。注：worker给发master发送消息要用process.send(message)<br> worker.kill([signal=’SIGTERM’]): 杀死指定的worker，别名destory()<br> worker.disconnect(): 断开worker连接，让worker自杀<br> Event: ‘message’: 监听master和worker的message事件<br> Event: ‘online’: 监听指定的worker创建成功事件<br> Event: ‘listening’: 监听master向worker状态事件<br> Event: ‘disconnect’: 监听worker断线事件<br> Event: ‘exit’: 监听worker退出事件</p>
+<h4 id="2-pm2-模式"><a href="#2-pm2-模式" class="headerlink" title="2. pm2 模式"></a>2. <strong>pm2 模式</strong></h4><p>简单代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"></span><br><span class="line">http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123; </span><br><span class="line"> res.writeHead(<span class="number">200</span>);</span><br><span class="line"> res.end(<span class="string">"hello world"</span>);</span><br><span class="line">&#125;).listen(<span class="number">8080</span>);</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>pm2 启动集群</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start app.js -i 4</span><br></pre></td></tr></table></figure>
+<p>-i <number of workers>参数用来告诉PM2以cluster_mode的形式运行你的app（对应的叫fork_mode），后面的数字表示要启动的工作线程的数量。如果给定的数字为0，PM2则会根据你CPU核心的数量来生成对应的工作线程。 </number></p>
+</li>
+<li><p>实时拓展集群</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> pm2 scale &lt;app name&gt; &lt;n&gt;</span><br><span class="line">pm2 scale app +3</span><br></pre></td></tr></table></figure>
+<p>参数<n>指定工作线程的数量，被用来增加或者减少集群数。</n></p>
+</li>
+<li><p>热重启</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> reload &lt;app name&gt;</span><br><span class="line">pm2 reload app</span><br><span class="line"><span class="meta">#</span> gracefulReload &lt;app name&gt;</span><br><span class="line">pm2 gracefulReload app</span><br></pre></td></tr></table></figure>
+<p>两者之间的区别： </p>
+<p>pm2 reload 将一次重启所有的工作线程，每一个线程会在等待新的线程创建之后才会被终止。gracefulReload功能可以达到相同的目的，但是它不会立即终止工作进程，而是通过IPC（进程间通信）发送一个shutdown信号开关闭当期所有的连接并处理一些自定义的任务，再优雅的退出。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义的关闭事件</span></span><br><span class="line">process.on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">msg</span>) </span>&#123; </span><br><span class="line"> <span class="keyword">if</span> (msg === <span class="string">'shutdown'</span>) &#123;</span><br><span class="line">  close_all_connections();</span><br><span class="line">  delete_cache();</span><br><span class="line">  server.close();</span><br><span class="line">  process.exit(<span class="number">0</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="四-单机多进程架构了解吗？多进程架构要考虑什么？"><a href="#四-单机多进程架构了解吗？多进程架构要考虑什么？" class="headerlink" title="四. 单机多进程架构了解吗？多进程架构要考虑什么？"></a>四. 单机多进程架构了解吗？多进程架构要考虑什么？</h3><p>多进程架构可以增加qps，高并发下性能衰退的幅度相对单进程的模式要低很多。并不能减少实际cpu的计算任务时间。</p>
+<p>原子操作？？？ 进程间通信？？？负载均衡（nginx better），平滑重启。（pm2了解一下）</p>
+<p>资源共享？？？  每个进程都有自己的区域，如果在各自区域内执行操作，资源并未共享。通过监听message事件和send实现消息传递，达到资源共享的效果</p>
+<p>redis或者 leveldb（）</p>
+<h3 id="五-Nodejs包和模块机制"><a href="#五-Nodejs包和模块机制" class="headerlink" title="五. Nodejs包和模块机制"></a>五. Nodejs包和模块机制</h3><p>es7以后 主要就是 </p>
+<blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">import</span> v <span class="keyword">from</span> <span class="string">"mod"</span>;</span><br><span class="line">&gt; <span class="keyword">import</span> * <span class="keyword">as</span> obj <span class="keyword">from</span> <span class="string">"mod"</span>;</span><br><span class="line">&gt; <span class="keyword">import</span> &#123;x&#125; <span class="keyword">from</span> <span class="string">"mod"</span>;</span><br><span class="line">&gt; <span class="keyword">import</span> &#123;x <span class="keyword">as</span> v&#125; <span class="keyword">from</span> <span class="string">"mod"</span>;</span><br><span class="line">&gt; <span class="keyword">import</span> <span class="string">"mod"</span>;</span><br><span class="line">&gt; </span><br><span class="line">&gt; <span class="keyword">export</span> <span class="keyword">var</span> v;</span><br><span class="line">&gt; <span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">&gt; <span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">&gt; <span class="keyword">export</span> <span class="keyword">default</span> <span class="number">42</span>;</span><br><span class="line">&gt; <span class="keyword">export</span> &#123;x&#125;;</span><br><span class="line">&gt; <span class="keyword">export</span> &#123;x <span class="keyword">as</span> v&#125;;</span><br><span class="line">&gt; <span class="keyword">export</span> &#123;x&#125; <span class="keyword">from</span> <span class="string">"mod"</span>;</span><br><span class="line">&gt; <span class="keyword">export</span> &#123;x <span class="keyword">as</span> v&#125; <span class="keyword">from</span> <span class="string">"mod"</span>;</span><br><span class="line">&gt; <span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">"mod"</span>;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>commonjs 规范的主要内容：</p>
+<p>模块必须通过 module.exports 导出对外的变量或接口，通过 require() 来导入其他模块的输出到当前模块作用域中。</p>
+<p>根据CommonJS规范，每一个文件就是一个模块，在每个模块中，都会有一个module对象，这个对象就指向当前的模块。module对象具有以下属性：</p>
+<blockquote>
+<p>（1）id：当前模块<br>（2）exports：表示当前模块暴露给外部的值<br>（3）parent： 是一个对象，表示调用当前模块的模块<br>（4）children：是一个对象，表示当前模块调用的模块<br>（5）filename：模块的绝对路径<br>（6）paths：从当前文件目录开始查找node_modules目录；然后依次进入父目录，查找父目录下的node_modules目录；依次迭代，直到根目录下的node_modules目录<br>（7）loaded：一个布尔值，表示当前模块是否已经被完全加载</p>
+</blockquote>
+<p>exports对象:</p>
+<blockquote>
+<ol>
+<li>exports和module.exports都是引用类型的变量，而且这两个对象指向同一块内存地址。在node中，二者一开始都是指向一个空对象的</li>
+<li>exports对象是通过形参的方式传入的，直接赋值形参会改变形参的引用，但是并不能改变作用域外的值</li>
+</ol>
+</blockquote>
+<p>require()方法 : 优先缓存</p>
+<blockquote>
+<blockquote>
+<ul>
+<li>require(): 加载外部模块</li>
+<li>require.resolve()：将模块名解析到一个绝对路径</li>
+<li>require.main：指向主模块</li>
+<li>require.cache：指向所有缓存的模块</li>
+<li>require.extensions：根据文件的后缀名，调用不同的执行函数</li>
+</ul>
+</blockquote>
+<p>从node中引入模块（非核心模块），需要经历三个步骤 ：路径分析，文件定位，编译执行</p>
+<p>清除缓存：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment">// 删除指定模块的缓存</span></span><br><span class="line">&gt; <span class="keyword">delete</span> <span class="built_in">require</span>.cache[<span class="built_in">require</span>.resolve(<span class="string">'/*XX模块*/'</span>)]</span><br><span class="line">&gt; <span class="comment">// 删除所有模块的缓存</span></span><br><span class="line">&gt; <span class="built_in">Object</span>.keys(<span class="built_in">require</span>.cach).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">key</span>)</span>&#123;</span><br><span class="line">&gt;     <span class="keyword">delete</span> <span class="built_in">require</span>.cache[key];</span><br><span class="line">&gt; &#125;)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="六-v8对于64位系统内存的限制是1-4G，大内存应用如何解决？V8分配内存管理内存？内存泄漏一般来说有哪几种正常姿势"><a href="#六-v8对于64位系统内存的限制是1-4G，大内存应用如何解决？V8分配内存管理内存？内存泄漏一般来说有哪几种正常姿势" class="headerlink" title="六. .v8对于64位系统内存的限制是1.4G，大内存应用如何解决？V8分配内存管理内存？内存泄漏一般来说有哪几种正常姿势"></a>六. .v8对于64位系统内存的限制是1.4G，大内存应用如何解决？V8分配内存管理内存？内存泄漏一般来说有哪几种正常姿势</h3><p>所有js对象都是通过堆分配内存，查看process.memoryUsage(),</p>
+<p>Node使用的内存不是都通过v8分配，还有堆外内存,用于处理网络流、I/O流</p>
+<h4 id="1-内存泄露"><a href="#1-内存泄露" class="headerlink" title="1. 内存泄露"></a>1. 内存泄露</h4><p>原因：缓存，队列消费不及时，作用域未释放</p>
+<p>把闭包赋值给一个不可控的对象时，会导致内存泄漏。使用完，将变量赋其他值或置空</p>
+<blockquote>
+<p>常见可能情况：</p>
+<ul>
+<li>循环引用：</li>
+<li>数组过大（循环中，无GC机会）或者私有变量（方法）占用过多</li>
+</ul>
+</blockquote>
+<p><strong>内存泄漏排查</strong></p>
+<h5 id="node-heapdump"><a href="#node-heapdump" class="headerlink" title="node-heapdump"></a>node-heapdump</h5><ol>
+<li>安装 npm install heapdump</li>
+<li>在开头引入 var heapdump = require(‘heapdump’);</li>
+<li>发送命令kill -USR2 <pid>，heapdump会抓拍一份堆内存快照，文件为heapdump-<sec>.<usec>.heapsnapshot格式，是json文件</usec></sec></pid></li>
+</ol>
+<h5 id="node-memwatch"><a href="#node-memwatch" class="headerlink" title="node-memwatch"></a>node-memwatch</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> memwatch = <span class="built_in">require</span>(<span class="string">'memwatch'</span>);</span><br><span class="line">memwatch.on(<span class="string">'leak'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">info</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'leak:'</span>,info);</span><br><span class="line">&#125;);</span><br><span class="line">memwatch.on(<span class="string">'stats'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">stats</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'stats:'</span>,stats);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在进程使用node-memwatch后，<strong>每次全堆垃圾回收，会触发stats事件</strong>，该事件会传递内存的统计信息</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">stats: &#123;</span><br><span class="line">        num_full_gc: <span class="number">4</span>, <span class="comment">//   第几次全堆垃圾回收</span></span><br><span class="line">        num_inc_gc: <span class="number">23</span>, <span class="comment">//    第几次增量垃圾回收 </span></span><br><span class="line">        heap_compactions: <span class="number">4</span>, <span class="comment">//  第几次对老生代整理</span></span><br><span class="line">        usage_trend: <span class="number">0</span>, <span class="comment">// 使用趋势</span></span><br><span class="line">        estimated_base: <span class="number">7152944</span>, <span class="comment">// 预估基数 </span></span><br><span class="line">        current_base: <span class="number">7152944</span>, <span class="comment">// 当前基数</span></span><br><span class="line">        min: <span class="number">6720776</span>, <span class="comment">//  最小</span></span><br><span class="line">        max: <span class="number">7152944</span>  <span class="comment">//最大</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>如果经过连续的5次垃圾回收后，内存仍没有被释放，意味有内存泄漏，node-memwatch会触发leak事件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">leak: <span class="number">8</span> &#123;</span><br><span class="line">    start: Mon Oct <span class="number">07</span> <span class="number">2013</span> <span class="number">13</span>: <span class="number">46</span>: <span class="number">27</span> GMT + <span class="number">0800</span>(CST),</span><br><span class="line">    end: Mon Oct <span class="number">07</span> <span class="number">2013</span> <span class="number">13</span>: <span class="number">54</span>: <span class="number">40</span> GMT + <span class="number">0800</span>(CST),</span><br><span class="line">    growth: <span class="number">6222576</span>,</span><br><span class="line">    reason: <span class="string">'heap growth over 5 consecutive GCs (8m 13s) - 43.33 mb/hr'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//显示内存增长了多了</span></span><br></pre></td></tr></table></figure>
+<p>使用node-memwatch的抓取快照和比较快照，能将内存泄漏定位到v8的堆上</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> memwatch = <span class="built_in">require</span>(<span class="string">'memwatch'</span>);</span><br><span class="line"><span class="keyword">var</span> leakArray = [];</span><br><span class="line"><span class="keyword">var</span> leak = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    leakArray.push(<span class="string">"leak"</span> + <span class="built_in">Math</span>.random());</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// Take first snapshot</span></span><br><span class="line"><span class="keyword">var</span> hd = <span class="keyword">new</span> memwatch.HeapDiff();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">    leak();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Take the second snapshot and compute the diff </span></span><br><span class="line"><span class="keyword">var</span> diff = hd.end();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(diff, <span class="literal">null</span>, <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"before"</span>: &#123;</span><br><span class="line">        <span class="string">"nodes"</span>: <span class="number">11719</span>,</span><br><span class="line">        <span class="string">"time"</span>: <span class="string">"2013-10-07T06:32:07.000Z"</span>,</span><br><span class="line">        <span class="string">"size_bytes"</span>: <span class="number">1493304</span>,</span><br><span class="line">        <span class="string">"size"</span>: <span class="string">"1.42 mb"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"after"</span>: &#123;</span><br><span class="line">        <span class="string">"nodes"</span>: <span class="number">31618</span>,</span><br><span class="line">        <span class="string">"time"</span>: <span class="string">"2013-10-07T06:32:07.000Z"</span>,</span><br><span class="line">        <span class="string">"size_bytes"</span>: <span class="number">2684864</span>,</span><br><span class="line">        <span class="string">"size"</span>: <span class="string">"2.56 mb"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"change"</span>: &#123;</span><br><span class="line">        <span class="string">"size_bytes"</span>: <span class="number">1191560</span>,</span><br><span class="line">        <span class="string">"size"</span>: <span class="string">"1.14 mb"</span>,</span><br><span class="line">        <span class="string">"freed_nodes"</span>: <span class="number">129</span>, <span class="comment">//释放的节点数</span></span><br><span class="line">        <span class="string">"allocated_nodes"</span>: <span class="number">20028</span>,<span class="comment">//分配的节点数</span></span><br><span class="line">        <span class="string">"details"</span>: [&#123;</span><br><span class="line">            <span class="string">"what"</span>: <span class="string">"Array"</span>,</span><br><span class="line">            <span class="string">"size_bytes"</span>: <span class="number">323720</span>,</span><br><span class="line">            <span class="string">"size"</span>: <span class="string">"316.13 kb"</span>,</span><br><span class="line">            <span class="string">"+"</span>: <span class="number">15</span>,</span><br><span class="line">            <span class="string">"-"</span>: <span class="number">65</span></span><br><span class="line">        &#125;, &#123;</span><br><span class="line">            <span class="string">"-"</span>: <span class="number">28</span></span><br><span class="line">        &#125;, &#123;</span><br><span class="line">            <span class="string">"what"</span>: <span class="string">"String"</span>,</span><br><span class="line">            <span class="string">"size_bytes"</span>: <span class="number">879424</span>,</span><br><span class="line">            <span class="string">"what"</span>: <span class="string">"Code"</span>,</span><br><span class="line">            <span class="string">"size_bytes"</span>: <span class="number">-10944</span>,</span><br><span class="line">            <span class="string">"size"</span>: <span class="string">"-10.69 kb"</span>,</span><br><span class="line">            <span class="string">"+"</span>: <span class="number">8</span>,</span><br><span class="line">            <span class="string">"size"</span>: <span class="string">"858.81 kb"</span>,</span><br><span class="line">            <span class="string">"+"</span>: <span class="number">20001</span>, <span class="comment">//大量的string未被回收</span></span><br><span class="line">            <span class="string">"-"</span>: <span class="number">1</span></span><br><span class="line">        &#125;]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-大内存应用"><a href="#2-大内存应用" class="headerlink" title="2. 大内存应用"></a>2. 大内存应用</h4><ul>
+<li>使用stream模块处理大文件，fs的createReadStream(),createWriteStream()</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reader = fs.createReadStream(<span class="string">'in.txt'</span>);</span><br><span class="line"><span class="keyword">var</span> writer = fs.createWriteStream(<span class="string">'out.txt'</span>);</span><br><span class="line">reader.on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">chunk</span>) </span>&#123;</span><br><span class="line">    writer.write(chunk);</span><br><span class="line">&#125;);</span><br><span class="line">reader.on(<span class="string">'end'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    writer.end();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//管道方法pipe()，封装了data事件和写入</span></span><br><span class="line"><span class="keyword">var</span> reader = fs.createReadStream(<span class="string">'in.txt'</span>);</span><br><span class="line"><span class="keyword">var</span> writer = fs.createWriteStream(<span class="string">'out.txt'</span>);</span><br><span class="line">reader.pipe(writer);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在不需要进行字符串操作时，可以不借助v8，使用Buffer操作，这样不会受到v8的内存限制</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2018/06/02/TODO/" rel="next" title="TODO">
+                  <i class="fa fa-chevron-left"></i> TODO
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2018/06/27/skills/" rel="prev" title="skills">
+                  skills <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#node"><span class="nav-number">1.</span> <span class="nav-text">node</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-koa洋葱模型是怎么实现的？和express对比解决了什么问题"><span class="nav-number">1.0.1.</span> <span class="nav-text">一. koa洋葱模型是怎么实现的？和express对比解决了什么问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-Nodejs-如何高效的获取时间戳而不影响性能"><span class="nav-number">1.0.2.</span> <span class="nav-text">二. Nodejs 如何高效的获取时间戳而不影响性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-node-js单线程的，如何发挥多核优势？cluster模块对比pm2有什么优势？"><span class="nav-number">1.0.3.</span> <span class="nav-text">三.node.js单线程的，如何发挥多核优势？cluster模块对比pm2有什么优势？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-cluster模式代码"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">1. cluster模式代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-pm2-模式"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">2. pm2 模式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-单机多进程架构了解吗？多进程架构要考虑什么？"><span class="nav-number">1.0.4.</span> <span class="nav-text">四. 单机多进程架构了解吗？多进程架构要考虑什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-Nodejs包和模块机制"><span class="nav-number">1.0.5.</span> <span class="nav-text">五. Nodejs包和模块机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六-v8对于64位系统内存的限制是1-4G，大内存应用如何解决？V8分配内存管理内存？内存泄漏一般来说有哪几种正常姿势"><span class="nav-number">1.0.6.</span> <span class="nav-text">六. .v8对于64位系统内存的限制是1.4G，大内存应用如何解决？V8分配内存管理内存？内存泄漏一般来说有哪几种正常姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-内存泄露"><span class="nav-number">1.0.6.1.</span> <span class="nav-text">1. 内存泄露</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#node-heapdump"><span class="nav-number">1.0.6.1.1.</span> <span class="nav-text">node-heapdump</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#node-memwatch"><span class="nav-number">1.0.6.1.2.</span> <span class="nav-text">node-memwatch</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-大内存应用"><span class="nav-number">1.0.6.2.</span> <span class="nav-text">2. 大内存应用</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/upload/ben.jpg"
+      alt="kk向日葵">
+  <p class="site-author-name" itemprop="name">kk向日葵</p>
+  <div class="site-description" itemprop="description">你眼中，清风明月</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:yourname@gmail.com" title="E-Mail &rarr; mailto:yourname@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://instagram.com/yourname" title="Instagram &rarr; https://instagram.com/yourname" rel="noopener" target="_blank"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kk向日葵</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/lib2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"lib2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/lib2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false,"tagMode":false});</script></body>
+</html>
